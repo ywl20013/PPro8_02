@@ -34,7 +34,7 @@ begin
   L2 := TL2Line.FromCSVString
     ('LocalTime=08:37:31.908,MarketTime=00:00:00.000,Mmid=,Side=s,Price=0,Volume=0,Depth=0,SequenceNumber=0');
   try
-
+    ShowMessage(L2.ToString);
   finally
     L2.Free;
   end;

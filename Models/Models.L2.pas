@@ -96,10 +96,9 @@ class function TL2Line.FromCSVString(source: string): TL2Line;
 var
   strs: TArray<string>;
 begin
-  strs := source.Split(',');
+  strs := source.Split([',']);
   Result := self.Create;
-  Result.FLocalTime := Now;
-  strs[0]
+  Result.FLocalTime := TDateTime.Create(strs[0].Split(['='])[1]);
 end;
 
 function TL2Line.ToString: string;

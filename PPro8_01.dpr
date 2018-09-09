@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   UI.Main in 'UI.Main.pas' {fmMain} ,
   Models.L2 in 'Models\Models.L2.pas',
-  UI.Test in 'UI.Test.pas' {fmTest};
+  UI.Test in 'UI.Test.pas' {fmTest} ,
+  DateTimeHelper in 'DateTimeHelper.pas';
 
 {$R *.res}
 
@@ -12,7 +13,7 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TfmMain, fmMain);
+  // Application.CreateForm(TfmMain, fmMain);
   Application.CreateForm(TfmTest, fmTest);
   Application.Run;
 

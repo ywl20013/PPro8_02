@@ -441,7 +441,7 @@ end;
 
 class function TDateTimeHelper.Create(const sSource: string): TDateTime;
 begin
-  Result := StrToTime(sSource);
+  Result := StrToTimeDef(sSource, 0);
 end;
 
 end.
