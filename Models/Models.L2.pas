@@ -45,6 +45,8 @@ type
     FMmid: string;
   public
     class function FromCSVString(source: string): TL2Line;
+
+    function ToString(): string;
   published
     /// <summary>
     /// 数据到达本地电脑的时间，按本地电脑的时间显示
@@ -86,6 +88,11 @@ implementation
 { TL2Line }
 
 class function TL2Line.FromCSVString(source: string): TL2Line;
+begin
+
+end;
+
+function TL2Line.ToString: string;
 begin
 
 end;
