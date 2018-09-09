@@ -48,7 +48,7 @@ type
   public
     class function FromCSVString(source: string): TL2Line;
 
-    function ToString(): string;
+    function CSVString(): string;
   published
     /// <summary>
     /// 数据到达本地电脑的时间，按本地电脑的时间显示
@@ -95,15 +95,54 @@ uses
 class function TL2Line.FromCSVString(source: string): TL2Line;
 var
   strs: TArray<string>;
+  strs2: TArray<string>;
 begin
   strs := source.Split([',']);
   Result := self.Create;
-  Result.FLocalTime := TDateTime.Create(strs[0].Split(['='])[1]);
+  strs2 := strs[0].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FLocalTime := TDateTime.Create(strs[0].Split(['='])[1]);
+
+  strs2 := strs[1].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FMarketTime := TDateTime.Create(strs[1].Split(['='])[1]);
+
+  strs2 := strs[2].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FMmid := strs[2].Split(['='])[1];
+
+  strs2 := strs[3].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FSide := strs[3].Split(['='])[1];
+
+  strs2 := strs[4].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FPrice := (strs[4].Split(['='])[1]).ToDouble();
+
+  strs2 := strs[5].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FVolume := (strs[5].Split(['='])[1]).ToInteger();
+
+  strs2 := strs[6].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FDepth := (strs[6].Split(['='])[1]).ToInteger();
+
+  strs2 := strs[7].Split(['=']);
+  if (Length(strs2) = 2) then
+    Result.FSequenceNumber := (strs[7].Split(['='])[1]).ToInteger();
 end;
 
-function TL2Line.ToString: string;
+function TL2Line.CSVString: string;
 begin
   Result := Format('LocalTime=%s,', [self.FLocalTime.ToString('HH:mm:ss.zzz')]);
+  Result := Result + Format('MarketTime=%s,',
+    [self.FMarketTime.ToString('HH:mm:ss.zzz')]);
+  Result := Result + Format('Mmid=%s,', [self.FMmid]);
+  Result := Result + Format('Side=%s,', [self.FSide]);
+  Result := Result + Format('Price=%f,', [self.FPrice]);
+  Result := Result + Format('Volume=%d,', [self.FVolume]);
+  Result := Result + Format('Depth=%d,', [self.FDepth]);
+  Result := Result + Format('SequenceNumber=%d', [self.FSequenceNumber]);
 end;
 
 end.

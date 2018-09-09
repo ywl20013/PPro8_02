@@ -11,6 +11,7 @@ object fmTest: TfmTest
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object btn1: TButton
@@ -21,5 +22,14 @@ object fmTest: TfmTest
     Caption = 'btn1'
     TabOrder = 0
     OnClick = btn1Click
+  end
+  object btn2: TButton
+    Left = 8
+    Top = 72
+    Width = 75
+    Height = 25
+    Caption = 'btn2'
+    TabOrder = 1
+    OnClick = btn2Click
   end
 end
