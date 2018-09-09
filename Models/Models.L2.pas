@@ -48,7 +48,7 @@ type
   public
     class function FromCSVString(source: string): TL2Line;
 
-    function CSVString(): string;
+    function ToCSVString(): string;
   published
     /// <summary>
     /// 数据到达本地电脑的时间，按本地电脑的时间显示
@@ -132,7 +132,7 @@ begin
     Result.FSequenceNumber := (strs[7].Split(['='])[1]).ToInteger();
 end;
 
-function TL2Line.CSVString: string;
+function TL2Line.ToCSVString: string;
 begin
   Result := Format('LocalTime=%s,', [self.FLocalTime.ToString('HH:mm:ss.zzz')]);
   Result := Result + Format('MarketTime=%s,',

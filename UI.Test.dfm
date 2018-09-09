@@ -17,19 +17,19 @@ object fmTest: TfmTest
   object btn1: TButton
     Left = 8
     Top = 8
-    Width = 75
+    Width = 273
     Height = 25
     Caption = 'btn1'
     TabOrder = 0
     OnClick = btn1Click
   end
-  object btn2: TButton
+  object btnStartUDP: TButton
     Left = 8
     Top = 72
-    Width = 75
+    Width = 97
     Height = 25
-    Caption = 'btn2'
+    Caption = 'btnStartUDP'
     TabOrder = 1
-    OnClick = btn2Click
+    OnClick = btnStartUDPClick
   end
 end

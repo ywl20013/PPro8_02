@@ -10,10 +10,10 @@ uses
 type
   TfmTest = class(TForm)
     btn1: TButton;
-    btn2: TButton;
+    btnStartUDP: TButton;
     procedure btn1Click(Sender: TObject);
-    procedure btn2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btnStartUDPClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -26,7 +26,7 @@ var
 implementation
 
 uses
-  Models.L2;
+  Models.L2, Data.Provider.UDP;
 
 {$R *.dfm}
 
@@ -37,7 +37,7 @@ begin
   L2 := TL2Line.FromCSVString
     ('LocalTime=08:37:31.908,MarketTime=00:00:00.000,Mmid=,Side=s,Price=0,Volume=0,Depth=0,SequenceNumber=0');
   try
-    Application.MessageBox(PChar(L2.CSVString), PChar(self.Caption));
+    Application.MessageBox(PChar(L2.ToCSVString), PChar(self.Caption));
   finally
     L2.Free;
   end;
@@ -45,26 +45,23 @@ begin
   L2 := TL2Line.FromCSVString
     ('LocalTime=08:37:35.706,MarketTime=00:00:00.000,Mmid=,Side=e,Price=0,Volume=0,Depth=0,SequenceNumber=0');
   try
-    Application.MessageBox(PChar(L2.CSVString), PChar(self.Caption));
+    Application.MessageBox(PChar(L2.ToCSVString), PChar(self.Caption));
   finally
     L2.Free;
   end;
 end;
 
-procedure TfmTest.btn2Click(Sender: TObject);
-var
-  strs: TArray<string>;
-  str1, str2: string;
+procedure TfmTest.btnStartUDPClick(Sender: TObject);
 begin
-  strs := 'Mmid='.Split(['=']);
-  str1 := strs[0];
-  str2 := strs[1];
-  ShowMessage(str1 + ' ' + str2);
+  dmProviderUDP := TdmProviderUDP.Create(Application);
+  dmProviderUDP.Port := 7026;
+  dmProviderUDP.Active := True;
 end;
 
 procedure TfmTest.FormCreate(Sender: TObject);
 begin
   self.Caption := '≤‚ ‘';
+  btn1.Caption := '≤‚ ‘Ω‚ŒˆLevel2 csv◊÷∑˚¥Æ';
 end;
 
 end.
