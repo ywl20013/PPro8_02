@@ -43,6 +43,8 @@ type
     FVolume: Cardinal;
     FSequenceNumber: Cardinal;
     FMmid: string;
+  public
+    class function FromCSVString(source: string): TL2Line;
   published
     /// <summary>
     /// 数据到达本地电脑的时间，按本地电脑的时间显示
@@ -80,5 +82,12 @@ type
   end;
 
 implementation
+
+{ TL2Line }
+
+class function TL2Line.FromCSVString(source: string): TL2Line;
+begin
+
+end;
 
 end.
