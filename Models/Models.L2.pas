@@ -2,6 +2,8 @@ unit Models.L2;
 
 interface
 
+uses System.SysUtils;
+
 type
   {
     Register?symbol=ZVZZT.NQ&feedtype=L2 & output=[bykey|bytype
@@ -85,16 +87,24 @@ type
 
 implementation
 
+uses
+  DateTimeHelper;
+
 { TL2Line }
 
 class function TL2Line.FromCSVString(source: string): TL2Line;
+var
+  strs: TArray<string>;
 begin
-
+  strs := source.Split(',');
+  Result := self.Create;
+  Result.FLocalTime := Now;
+  strs[0]
 end;
 
 function TL2Line.ToString: string;
 begin
-
+  Result := Format('LocalTime=%s,', [self.FLocalTime.ToString('HH:mm:ss.zzz')]);
 end;
 
 end.

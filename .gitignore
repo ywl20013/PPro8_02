@@ -4,3 +4,4 @@ Win32/
 Win64/
 *.local
 *.identcache
+*.stat
