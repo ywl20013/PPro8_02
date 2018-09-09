@@ -109,6 +109,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="DateTimeHelper.pas"/>
+        <DCCReference Include="Data.Provider.UDP.pas">
+            <Form>dmProviderUDP</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
