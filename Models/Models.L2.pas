@@ -103,9 +103,11 @@ uses
 
 class function TL2Line.FromCSVString( source: string ): TL2Line;
 var
+  dtNow            : TDateTime;
   pair, name, value: string;
   strs, strs2      : TArray< string >;
 begin
+  dtNow  := TDateTime.Now;
   strs   := source.Split( [ ',' ] );
   Result := self.Create;
   for pair in strs do
@@ -121,11 +123,11 @@ begin
       end
       else if LowerCase( name ) = LowerCase( 'LocalTime' ) then
       begin
-        Result.FLocalTime := TDateTime.Create( value );
+        Result.FLocalTime := TDateTime.Create( value ).ReplaceDate( dtNow );
       end
       else if LowerCase( name ) = LowerCase( 'MarketTime' ) then
       begin
-        Result.FMarketTime := TDateTime.Create( value );
+        Result.FMarketTime := TDateTime.Create( value ).ReplaceDate( dtNow );
       end
       else if LowerCase( name ) = LowerCase( 'Mmid' ) then
       begin
@@ -149,7 +151,7 @@ begin
       end
       else if LowerCase( name ) = LowerCase( 'SequenceNumber' ) then
       begin
-        Result.FSequenceNumber := value.ToInteger( );
+        Result.FSequenceNumber := value.Replace( #13#10, '' ).Replace( #13, '' ).Replace( #10, '' ).ToInteger( );
       end
 
     end;

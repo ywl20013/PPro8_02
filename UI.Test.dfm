@@ -20,7 +20,7 @@ object fmTest: TfmTest
   TextHeight = 13
   object btn1: TButton
     Left = 8
-    Top = 43
+    Top = 19
     Width = 273
     Height = 25
     Caption = 'btn1'
@@ -29,13 +29,13 @@ object fmTest: TfmTest
   end
   object Memo1: TMemo
     Left = 8
-    Top = 176
+    Top = 152
     Width = 619
-    Height = 115
+    Height = 139
     Anchors = [akLeft, akTop, akRight, akBottom]
     Lines.Strings = (
       'Memo1')
-    TabOrder = 4
+    TabOrder = 5
   end
   object chkListening: TCheckBox
     Left = 8
@@ -43,7 +43,7 @@ object fmTest: TfmTest
     Width = 449
     Height = 17
     Caption = 'chkListening'
-    TabOrder = 2
+    TabOrder = 3
     OnClick = chkListeningClick
   end
   object chkSendTestUDPData: TCheckBox
@@ -52,7 +52,7 @@ object fmTest: TfmTest
     Width = 449
     Height = 17
     Caption = 'chkSendTestUDPData'
-    TabOrder = 1
+    TabOrder = 2
     OnClick = chkSendTestUDPDataClick
   end
   object chkStoreToSqlite: TCheckBox
@@ -61,8 +61,17 @@ object fmTest: TfmTest
     Width = 449
     Height = 17
     Caption = 'chkStoreToSqlite'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = chkStoreToSqliteClick
+  end
+  object edtUDPPort: TEdit
+    Left = 8
+    Top = 48
+    Width = 121
+    Height = 21
+    TabOrder = 1
+    Text = 'edtUDPPort'
+    OnChange = edtUDPPortChange
   end
   object tmrLabelFormSizeDisplay: TTimer
     Enabled = False

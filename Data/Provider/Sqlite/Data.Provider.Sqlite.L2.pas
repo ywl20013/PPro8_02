@@ -52,7 +52,7 @@ begin
   begin
     asql :=
       'CREATE TABLE L2Lines(' +
-      '   ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,' +
+      '   ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
       '   NAME           TEXT         NOT NULL,' +
       '   LOCALTIME      DATETIME     NOT NULL default (datetime(''now'', ''localtime'')),' +
       '   MARKETTIME     DATETIME     NOT NULL,' +

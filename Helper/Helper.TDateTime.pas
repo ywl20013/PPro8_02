@@ -28,7 +28,9 @@ unit Helper.TDateTime;
 interface
 
 uses
-  System.SysUtils, System.Types, System.DateUtils;
+  System.SysUtils,
+  System.Types,
+  System.DateUtils;
 
 type
   TDateTimeHelper = record helper for TDateTime
@@ -49,11 +51,11 @@ type
     class function GetTomorrow: TDateTime; static; inline;
     class function GetYesterDay: TDateTime; static; inline;
   public
-    class function Create(const aYear, aMonth, aDay: Word): TDateTime; overload;
+    class function Create( const aYear, aMonth, aDay: Word ): TDateTime; overload;
       static; inline;
-    class function Create(const aYear, aMonth, aDay, aHour, aMinute, aSecond,
-      aMillisecond: Word): TDateTime; overload; static; inline;
-    class function Create(const sSource: string): TDateTime; overload;
+    class function Create( const aYear, aMonth, aDay, aHour, aMinute, aSecond,
+      aMillisecond: Word ): TDateTime; overload; static; inline;
+    class function Create( const sSource: string ): TDateTime; overload;
       static; inline;
 
     class property Now: TDateTime read GetNow;
@@ -75,7 +77,7 @@ type
     property Second: Word read GetSecond;
     property Millisecond: Word read GetMillisecond;
 
-    function ToString(const aFormatStr: string = ''): string; inline;
+    function ToString( const aFormatStr: string = '' ): string; inline;
 
     function StartOfYear: TDateTime; inline;
     function EndOfYear: TDateTime; inline;
@@ -86,179 +88,182 @@ type
     function StartOfDay: TDateTime; inline;
     function EndOfDay: TDateTime; inline;
 
-    function AddYears(const aNumberOfYears: Integer = 1): TDateTime; inline;
-    function AddMonths(const aNumberOfMonths: Integer = 1): TDateTime; inline;
-    function AddDays(const aNumberOfDays: Integer = 1): TDateTime; inline;
-    function AddHours(const aNumberOfHours: Int64 = 1): TDateTime; inline;
-    function AddMinutes(const aNumberOfMinutes: Int64 = 1): TDateTime; inline;
-    function AddSeconds(const aNumberOfSeconds: Int64 = 1): TDateTime; inline;
-    function AddMilliseconds(const aNumberOfMilliseconds: Int64 = 1)
+    function ReplaceDate( const aDate: TDate ): TDateTime; inline;
+    function ReplaceTime( const aTime: TTime ): TDateTime; inline;
+
+    function AddYears( const aNumberOfYears: Integer = 1 ): TDateTime; inline;
+    function AddMonths( const aNumberOfMonths: Integer = 1 ): TDateTime; inline;
+    function AddDays( const aNumberOfDays: Integer = 1 ): TDateTime; inline;
+    function AddHours( const aNumberOfHours: Int64 = 1 ): TDateTime; inline;
+    function AddMinutes( const aNumberOfMinutes: Int64 = 1 ): TDateTime; inline;
+    function AddSeconds( const aNumberOfSeconds: Int64 = 1 ): TDateTime; inline;
+    function AddMilliseconds( const aNumberOfMilliseconds: Int64 = 1 )
       : TDateTime; inline;
 
-    function CompareTo(const aDateTime: TDateTime): TValueRelationship; inline;
-    function Equals(const aDateTime: TDateTime): Boolean; inline;
-    function IsSameDay(const aDateTime: TDateTime): Boolean; inline;
-    function InRange(const aStartDateTime, aEndDateTime: TDateTime;
-      const aInclusive: Boolean = True): Boolean; inline;
+    function CompareTo( const aDateTime: TDateTime ): TValueRelationship; inline;
+    function Equals( const aDateTime: TDateTime ): Boolean; inline;
+    function IsSameDay( const aDateTime: TDateTime ): Boolean; inline;
+    function InRange( const aStartDateTime, aEndDateTime: TDateTime;
+      const aInclusive: Boolean = True ): Boolean; inline;
     function IsInLeapYear: Boolean; inline;
     function IsToday: Boolean; inline;
     function IsAM: Boolean; inline;
     function IsPM: Boolean; inline;
 
-    function YearsBetween(const aDateTime: TDateTime): Integer; inline;
-    function MonthsBetween(const aDateTime: TDateTime): Integer; inline;
-    function WeeksBetween(const aDateTime: TDateTime): Integer; inline;
-    function DaysBetween(const aDateTime: TDateTime): Integer; inline;
-    function HoursBetween(const aDateTime: TDateTime): Int64; inline;
-    function MinutesBetween(const aDateTime: TDateTime): Int64; inline;
-    function SecondsBetween(const aDateTime: TDateTime): Int64; inline;
-    function MilliSecondsBetween(const aDateTime: TDateTime): Int64; inline;
+    function YearsBetween( const aDateTime: TDateTime ): Integer; inline;
+    function MonthsBetween( const aDateTime: TDateTime ): Integer; inline;
+    function WeeksBetween( const aDateTime: TDateTime ): Integer; inline;
+    function DaysBetween( const aDateTime: TDateTime ): Integer; inline;
+    function HoursBetween( const aDateTime: TDateTime ): Int64; inline;
+    function MinutesBetween( const aDateTime: TDateTime ): Int64; inline;
+    function SecondsBetween( const aDateTime: TDateTime ): Int64; inline;
+    function MilliSecondsBetween( const aDateTime: TDateTime ): Int64; inline;
 
-    function WithinYears(const aDateTime: TDateTime; const aYears: Integer)
+    function WithinYears( const aDateTime: TDateTime; const aYears: Integer )
       : Boolean; inline;
-    function WithinMonths(const aDateTime: TDateTime; const aMonths: Integer)
+    function WithinMonths( const aDateTime: TDateTime; const aMonths: Integer )
       : Boolean; inline;
-    function WithinWeeks(const aDateTime: TDateTime; const aWeeks: Integer)
+    function WithinWeeks( const aDateTime: TDateTime; const aWeeks: Integer )
       : Boolean; inline;
-    function WithinDays(const aDateTime: TDateTime; const aDays: Integer)
+    function WithinDays( const aDateTime: TDateTime; const aDays: Integer )
       : Boolean; inline;
-    function WithinHours(const aDateTime: TDateTime; const aHours: Int64)
+    function WithinHours( const aDateTime: TDateTime; const aHours: Int64 )
       : Boolean; inline;
-    function WithinMinutes(const aDateTime: TDateTime; const aMinutes: Int64)
+    function WithinMinutes( const aDateTime: TDateTime; const aMinutes: Int64 )
       : Boolean; inline;
-    function WithinSeconds(const aDateTime: TDateTime; const aSeconds: Int64)
+    function WithinSeconds( const aDateTime: TDateTime; const aSeconds: Int64 )
       : Boolean; inline;
-    function WithinMilliseconds(const aDateTime: TDateTime;
-      const AMilliseconds: Int64): Boolean; inline;
+    function WithinMilliseconds( const aDateTime: TDateTime;
+      const AMilliseconds: Int64 ): Boolean; inline;
   end;
 
 implementation
 
 { TDateTimeHelper }
 
-function TDateTimeHelper.AddDays(const aNumberOfDays: Integer): TDateTime;
+function TDateTimeHelper.AddDays( const aNumberOfDays: Integer ): TDateTime;
 begin
-  Result := IncDay(Self, aNumberOfDays);
+  Result := IncDay( self, aNumberOfDays );
 end;
 
-function TDateTimeHelper.AddHours(const aNumberOfHours: Int64): TDateTime;
+function TDateTimeHelper.AddHours( const aNumberOfHours: Int64 ): TDateTime;
 begin
-  Result := IncHour(Self, aNumberOfHours);
+  Result := IncHour( self, aNumberOfHours );
 end;
 
-function TDateTimeHelper.AddMilliseconds(const aNumberOfMilliseconds: Int64)
+function TDateTimeHelper.AddMilliseconds( const aNumberOfMilliseconds: Int64 )
   : TDateTime;
 begin
-  Result := IncMilliSecond(Self, aNumberOfMilliseconds);
+  Result := IncMilliSecond( self, aNumberOfMilliseconds );
 end;
 
-function TDateTimeHelper.AddMinutes(const aNumberOfMinutes: Int64): TDateTime;
+function TDateTimeHelper.AddMinutes( const aNumberOfMinutes: Int64 ): TDateTime;
 begin
-  Result := IncMinute(Self, aNumberOfMinutes);
+  Result := IncMinute( self, aNumberOfMinutes );
 end;
 
-function TDateTimeHelper.AddMonths(const aNumberOfMonths: Integer): TDateTime;
+function TDateTimeHelper.AddMonths( const aNumberOfMonths: Integer ): TDateTime;
 begin
-  Result := IncMonth(Self, aNumberOfMonths);
+  Result := IncMonth( self, aNumberOfMonths );
 end;
 
-function TDateTimeHelper.AddSeconds(const aNumberOfSeconds: Int64): TDateTime;
+function TDateTimeHelper.AddSeconds( const aNumberOfSeconds: Int64 ): TDateTime;
 begin
-  Result := IncSecond(Self, aNumberOfSeconds);
+  Result := IncSecond( self, aNumberOfSeconds );
 end;
 
-function TDateTimeHelper.AddYears(const aNumberOfYears: Integer): TDateTime;
+function TDateTimeHelper.AddYears( const aNumberOfYears: Integer ): TDateTime;
 begin
-  Result := IncYear(Self, aNumberOfYears);
+  Result := IncYear( self, aNumberOfYears );
 end;
 
-function TDateTimeHelper.CompareTo(const aDateTime: TDateTime)
+function TDateTimeHelper.CompareTo( const aDateTime: TDateTime )
   : TValueRelationship;
 begin
-  Result := CompareDateTime(Self, aDateTime);
+  Result := CompareDateTime( self, aDateTime );
 end;
 
-class function TDateTimeHelper.Create(const aYear, aMonth, aDay: Word)
+class function TDateTimeHelper.Create( const aYear, aMonth, aDay: Word )
   : TDateTime;
 begin
-  Result := EncodeDate(aYear, aMonth, aDay);
+  Result := EncodeDate( aYear, aMonth, aDay );
 end;
 
-class function TDateTimeHelper.Create(const aYear, aMonth, aDay, aHour, aMinute,
-  aSecond, aMillisecond: Word): TDateTime;
+class function TDateTimeHelper.Create( const aYear, aMonth, aDay, aHour, aMinute,
+  aSecond, aMillisecond: Word ): TDateTime;
 begin
-  Result := EncodeDateTime(aYear, aMonth, aDay, aHour, aMinute, aSecond,
-    aMillisecond);
+  Result := EncodeDateTime( aYear, aMonth, aDay, aHour, aMinute, aSecond,
+    aMillisecond );
 end;
 
-function TDateTimeHelper.DaysBetween(const aDateTime: TDateTime): Integer;
+function TDateTimeHelper.DaysBetween( const aDateTime: TDateTime ): Integer;
 begin
-  Result := System.DateUtils.DaysBetween(Self, aDateTime);
+  Result := System.DateUtils.DaysBetween( self, aDateTime );
 end;
 
 function TDateTimeHelper.EndOfDay: TDateTime;
 begin
-  Result := EndOfTheDay(Self);
+  Result := EndOfTheDay( self );
 end;
 
 function TDateTimeHelper.EndOfMonth: TDateTime;
 begin
-  Result := EndOfTheMonth(Self);
+  Result := EndOfTheMonth( self );
 end;
 
 function TDateTimeHelper.EndOfWeek: TDateTime;
 begin
-  Result := EndOfTheWeek(Self);
+  Result := EndOfTheWeek( self );
 end;
 
 function TDateTimeHelper.EndOfYear: TDateTime;
 begin
-  Result := EndOfTheYear(Self);
+  Result := EndOfTheYear( self );
 end;
 
-function TDateTimeHelper.Equals(const aDateTime: TDateTime): Boolean;
+function TDateTimeHelper.Equals( const aDateTime: TDateTime ): Boolean;
 begin
-  Result := SameDateTime(Self, aDateTime);
+  Result := SameDateTime( self, aDateTime );
 end;
 
 function TDateTimeHelper.GetDate: TDateTime;
 begin
-  Result := DateOf(Self);
+  Result := DateOf( self );
 end;
 
 function TDateTimeHelper.GetDay: Word;
 begin
-  Result := DayOf(Self);
+  Result := DayOf( self );
 end;
 
 function TDateTimeHelper.GetDayOfWeek: Word;
 begin
-  Result := DayOfTheWeek(Self);
+  Result := DayOfTheWeek( self );
 end;
 
 function TDateTimeHelper.GetDayOfYear: Word;
 begin
-  Result := DayOfTheYear(Self);
+  Result := DayOfTheYear( self );
 end;
 
 function TDateTimeHelper.GetHour: Word;
 begin
-  Result := HourOf(Self);
+  Result := HourOf( self );
 end;
 
 function TDateTimeHelper.GetMillisecond: Word;
 begin
-  Result := MilliSecondOf(Self);
+  Result := MilliSecondOf( self );
 end;
 
 function TDateTimeHelper.GetMinute: Word;
 begin
-  Result := MinuteOf(Self);
+  Result := MinuteOf( self );
 end;
 
 function TDateTimeHelper.GetMonth: Word;
 begin
-  Result := MonthOf(Self);
+  Result := MonthOf( self );
 end;
 
 class function TDateTimeHelper.GetNow: TDateTime;
@@ -268,12 +273,12 @@ end;
 
 function TDateTimeHelper.GetSecond: Word;
 begin
-  Result := SecondOf(Self);
+  Result := SecondOf( self );
 end;
 
 function TDateTimeHelper.GetTime: TDateTime;
 begin
-  Result := TimeOf(Self);
+  Result := TimeOf( self );
 end;
 
 class function TDateTimeHelper.GetToday: TDateTime;
@@ -288,7 +293,7 @@ end;
 
 function TDateTimeHelper.GetYear: Word;
 begin
-  Result := YearOf(Self);
+  Result := YearOf( self );
 end;
 
 class function TDateTimeHelper.GetYesterDay: TDateTime;
@@ -296,152 +301,162 @@ begin
   Result := System.SysUtils.Date - 1;
 end;
 
-function TDateTimeHelper.HoursBetween(const aDateTime: TDateTime): Int64;
+function TDateTimeHelper.HoursBetween( const aDateTime: TDateTime ): Int64;
 begin
-  Result := System.DateUtils.HoursBetween(Self, aDateTime);
+  Result := System.DateUtils.HoursBetween( self, aDateTime );
 end;
 
-function TDateTimeHelper.InRange(const aStartDateTime, aEndDateTime: TDateTime;
-  const aInclusive: Boolean): Boolean;
+function TDateTimeHelper.InRange( const aStartDateTime, aEndDateTime: TDateTime;
+  const aInclusive: Boolean ): Boolean;
 begin
-  Result := DateTimeInRange(Self, aStartDateTime, aEndDateTime, aInclusive);
+  Result := DateTimeInRange( self, aStartDateTime, aEndDateTime, aInclusive );
 end;
 
 function TDateTimeHelper.IsAM: Boolean;
 begin
-  Result := System.DateUtils.IsAM(Self);
+  Result := System.DateUtils.IsAM( self );
 end;
 
 function TDateTimeHelper.IsInLeapYear: Boolean;
 begin
-  Result := System.DateUtils.IsInLeapYear(Self);
+  Result := System.DateUtils.IsInLeapYear( self );
 end;
 
 function TDateTimeHelper.IsPM: Boolean;
 begin
-  Result := System.DateUtils.IsPM(Self);
+  Result := System.DateUtils.IsPM( self );
 end;
 
-function TDateTimeHelper.IsSameDay(const aDateTime: TDateTime): Boolean;
+function TDateTimeHelper.IsSameDay( const aDateTime: TDateTime ): Boolean;
 begin
-  Result := System.DateUtils.IsSameDay(Self, aDateTime);
+  Result := System.DateUtils.IsSameDay( self, aDateTime );
 end;
 
 function TDateTimeHelper.IsToday: Boolean;
 begin
-  Result := System.DateUtils.IsToday(Self);
+  Result := System.DateUtils.IsToday( self );
 end;
 
-function TDateTimeHelper.MilliSecondsBetween(const aDateTime: TDateTime): Int64;
+function TDateTimeHelper.MilliSecondsBetween( const aDateTime: TDateTime ): Int64;
 begin
-  Result := System.DateUtils.MilliSecondsBetween(Self, aDateTime);
+  Result := System.DateUtils.MilliSecondsBetween( self, aDateTime );
 end;
 
-function TDateTimeHelper.MinutesBetween(const aDateTime: TDateTime): Int64;
+function TDateTimeHelper.MinutesBetween( const aDateTime: TDateTime ): Int64;
 begin
-  Result := System.DateUtils.MinutesBetween(Self, aDateTime);
+  Result := System.DateUtils.MinutesBetween( self, aDateTime );
 end;
 
-function TDateTimeHelper.MonthsBetween(const aDateTime: TDateTime): Integer;
+function TDateTimeHelper.MonthsBetween( const aDateTime: TDateTime ): Integer;
 begin
-  Result := System.DateUtils.MonthsBetween(Self, aDateTime);
+  Result := System.DateUtils.MonthsBetween( self, aDateTime );
 end;
 
-function TDateTimeHelper.SecondsBetween(const aDateTime: TDateTime): Int64;
+function TDateTimeHelper.ReplaceDate( const aDate: TDate ): TDateTime;
 begin
-  Result := System.DateUtils.SecondsBetween(Self, aDateTime);
+  Result := TDateTime( frac( self ) + trunc( aDate ) );
+end;
+
+function TDateTimeHelper.ReplaceTime( const aTime: TTime ): TDateTime;
+begin
+  Result := TDateTime( frac( aTime ) + trunc( self ) );
+end;
+
+function TDateTimeHelper.SecondsBetween( const aDateTime: TDateTime ): Int64;
+begin
+  Result := System.DateUtils.SecondsBetween( self, aDateTime );
 end;
 
 function TDateTimeHelper.StartOfDay: TDateTime;
 begin
-  Result := StartOfTheDay(Self);
+  Result := StartOfTheDay( self );
 end;
 
 function TDateTimeHelper.StartOfMonth: TDateTime;
 begin
-  Result := StartOfTheMonth(Self);
+  Result := StartOfTheMonth( self );
 end;
 
 function TDateTimeHelper.StartOfWeek: TDateTime;
 begin
-  Result := StartOfTheWeek(Self);
+  Result := StartOfTheWeek( self );
 end;
 
 function TDateTimeHelper.StartOfYear: TDateTime;
 begin
-  Result := StartOfTheYear(Self);
+  Result := StartOfTheYear( self );
 end;
 
-function TDateTimeHelper.ToString(const aFormatStr: string): string;
+function TDateTimeHelper.ToString( const aFormatStr: string ): string;
 begin
   if aFormatStr = '' then
-    Result := DateToStr(Self)
+      Result := DateToStr( self )
   else
-    Result := FormatDateTime(aFormatStr, Self);
+      Result := FormatDateTime( aFormatStr, self );
 end;
 
-function TDateTimeHelper.WeeksBetween(const aDateTime: TDateTime): Integer;
+function TDateTimeHelper.WeeksBetween( const aDateTime: TDateTime ): Integer;
 begin
-  Result := System.DateUtils.WeeksBetween(Self, aDateTime);
+  Result := System.DateUtils.WeeksBetween( self, aDateTime );
 end;
 
-function TDateTimeHelper.WithinDays(const aDateTime: TDateTime;
-  const aDays: Integer): Boolean;
+function TDateTimeHelper.WithinDays( const aDateTime: TDateTime;
+  const aDays: Integer ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastDays(Self, aDateTime, aDays);
+  Result := System.DateUtils.WithinPastDays( self, aDateTime, aDays );
 end;
 
-function TDateTimeHelper.WithinHours(const aDateTime: TDateTime;
-  const aHours: Int64): Boolean;
+function TDateTimeHelper.WithinHours( const aDateTime: TDateTime;
+  const aHours: Int64 ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastHours(Self, aDateTime, aHours);
+  Result := System.DateUtils.WithinPastHours( self, aDateTime, aHours );
 end;
 
-function TDateTimeHelper.WithinMilliseconds(const aDateTime: TDateTime;
-  const AMilliseconds: Int64): Boolean;
+function TDateTimeHelper.WithinMilliseconds( const aDateTime: TDateTime;
+  const AMilliseconds: Int64 ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastMilliSeconds(Self, aDateTime,
-    AMilliseconds);
+  Result := System.DateUtils.WithinPastMilliSeconds( self, aDateTime,
+    AMilliseconds );
 end;
 
-function TDateTimeHelper.WithinMinutes(const aDateTime: TDateTime;
-  const aMinutes: Int64): Boolean;
+function TDateTimeHelper.WithinMinutes( const aDateTime: TDateTime;
+  const aMinutes: Int64 ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastMinutes(Self, aDateTime, aMinutes);
+  Result := System.DateUtils.WithinPastMinutes( self, aDateTime, aMinutes );
 end;
 
-function TDateTimeHelper.WithinMonths(const aDateTime: TDateTime;
-  const aMonths: Integer): Boolean;
+function TDateTimeHelper.WithinMonths( const aDateTime: TDateTime;
+  const aMonths: Integer ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastMonths(Self, aDateTime, aMonths);
+  Result := System.DateUtils.WithinPastMonths( self, aDateTime, aMonths );
 end;
 
-function TDateTimeHelper.WithinSeconds(const aDateTime: TDateTime;
-  const aSeconds: Int64): Boolean;
+function TDateTimeHelper.WithinSeconds( const aDateTime: TDateTime;
+  const aSeconds: Int64 ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastSeconds(Self, aDateTime, aSeconds);
+  Result := System.DateUtils.WithinPastSeconds( self, aDateTime, aSeconds );
 end;
 
-function TDateTimeHelper.WithinWeeks(const aDateTime: TDateTime;
-  const aWeeks: Integer): Boolean;
+function TDateTimeHelper.WithinWeeks( const aDateTime: TDateTime;
+  const aWeeks: Integer ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastWeeks(Self, aDateTime, aWeeks);
+  Result := System.DateUtils.WithinPastWeeks( self, aDateTime, aWeeks );
 end;
 
-function TDateTimeHelper.WithinYears(const aDateTime: TDateTime;
-  const aYears: Integer): Boolean;
+function TDateTimeHelper.WithinYears( const aDateTime: TDateTime;
+  const aYears: Integer ): Boolean;
 begin
-  Result := System.DateUtils.WithinPastYears(Self, aDateTime, aYears);
+  Result := System.DateUtils.WithinPastYears( self, aDateTime, aYears );
 end;
 
-function TDateTimeHelper.YearsBetween(const aDateTime: TDateTime): Integer;
+function TDateTimeHelper.YearsBetween( const aDateTime: TDateTime ): Integer;
 begin
-  Result := System.DateUtils.YearsBetween(Self, aDateTime);
+  Result := System.DateUtils.YearsBetween( self, aDateTime );
 end;
 
-class function TDateTimeHelper.Create(const sSource: string): TDateTime;
+class function TDateTimeHelper.Create( const sSource: string ): TDateTime;
 begin
-  Result := StrToTimeDef(sSource, 0);
+  Result := StrToTimeDef( sSource, 0 );
 end;
 
 end.

@@ -66,14 +66,14 @@ begin
   L2.Depth          := 1;
   L2.SequenceNumber := 27003;
   try
-    self.IdUDPClient1.Send( '127.0.0.1', 7026, L2.ToCSVString );
+    self.IdUDPClient1.Send( L2.ToCSVString( ) + #13#10 );
 
     L2.LocalTime  := Now;
     L2.MarketTime := Now;
     L2.Side       := 'e';
     L2.Price      := 1.66;
     L2.Volume     := 200;
-    self.IdUDPClient1.Send( '127.0.0.1', 7026, L2.ToCSVString );
+    self.IdUDPClient1.Send( L2.ToCSVString + #13#10 );
   finally
     L2.Free;
   end;

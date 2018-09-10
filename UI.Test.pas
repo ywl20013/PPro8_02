@@ -27,6 +27,7 @@ type
     chkSendTestUDPData: TCheckBox;
     tmrLabelFormSizeDisplay: TTimer;
     chkStoreToSqlite: TCheckBox;
+    edtUDPPort: TEdit;
     procedure btn1Click( Sender: TObject );
     procedure FormCreate( Sender: TObject );
     procedure chkListeningClick( Sender: TObject );
@@ -34,15 +35,18 @@ type
     procedure tmrLabelFormSizeDisplayTimer( Sender: TObject );
     procedure FormResize( Sender: TObject );
     procedure chkStoreToSqliteClick( Sender: TObject );
+    procedure edtUDPPortChange( Sender: TObject );
   private
     FLabelFormSizeDisplay: TLabel;
 
     FDataProvider: TDataProvider;
 
+    FUDPPort: Word;
+
     procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
       const AData: TIdBytes; ABinding: TIdSocketHandle );
   public
-
+    procedure Init;
   end;
 
 var
@@ -84,10 +88,32 @@ procedure TfmTest.chkListeningClick( Sender: TObject );
 begin
   if TCheckBox( Sender ).Checked then
   begin
+    if ( not Assigned( dmProviderUDPServer ) ) then
+    begin
+      dmProviderUDPServer           := TdmProviderUDPServer.Create( Application );
+      dmProviderUDPServer.OnUDPRead := self.IdUDPServerUDPRead;
+    end;
+    dmProviderUDPServer.Port   := FUDPPort;
+    dmProviderUDPServer.Active := True;
+  end
+  else
+  begin
+    if ( Assigned( dmProviderUDPServer ) ) then
+    begin
+      dmProviderUDPServer.Active := False;
+    end;
+  end;
+  edtUDPPort.Enabled := not TCheckBox( Sender ).Checked;
+end;
+
+procedure TfmTest.chkSendTestUDPDataClick( Sender: TObject );
+begin
+  if TCheckBox( Sender ).Checked then
+  begin
     if ( not Assigned( dmProviderUDPTest ) ) then
     begin
       dmProviderUDPTest      := TdmProviderUDPTest.Create( Application );
-      dmProviderUDPTest.Port := 7026;
+      dmProviderUDPTest.Port := FUDPPort;
     end;
     dmProviderUDPTest.Active := True;
   end
@@ -96,27 +122,6 @@ begin
     if ( Assigned( dmProviderUDPTest ) ) then
     begin
       dmProviderUDPTest.Active := False;
-    end;
-  end;
-end;
-
-procedure TfmTest.chkSendTestUDPDataClick( Sender: TObject );
-begin
-  if TCheckBox( Sender ).Checked then
-  begin
-    if ( not Assigned( dmProviderUDPServer ) ) then
-    begin
-      dmProviderUDPServer           := TdmProviderUDPServer.Create( Application );
-      dmProviderUDPServer.Port      := 7026;
-      dmProviderUDPServer.OnUDPRead := self.IdUDPServerUDPRead;
-    end;
-    dmProviderUDPServer.Active := True;
-  end
-  else
-  begin
-    if ( Assigned( dmProviderUDPServer ) ) then
-    begin
-      dmProviderUDPServer.Active := False;
     end;
   end;
 end;
@@ -142,6 +147,18 @@ begin
   end;
 end;
 
+procedure TfmTest.edtUDPPortChange( Sender: TObject );
+begin
+  FUDPPort                   := StrToUIntDef( edtUDPPort.Text, 7026 );
+  chkSendTestUDPData.Caption := '测试每1秒向本机UDP:' + FUDPPort.ToString + '端口发送Level2数据';
+  chkListening.Caption       := '监听本地UDP:' + FUDPPort.ToString + '端口';
+
+  if ( Assigned( dmProviderUDPTest ) ) then
+  begin
+    dmProviderUDPTest.Port := FUDPPort;
+  end;
+end;
+
 procedure TfmTest.FormCreate( Sender: TObject );
 begin
   self.OnResize  := nil;
@@ -151,9 +168,10 @@ begin
   self.Width     := 1000;
   btn1.Caption   := '测试解析Level2 csv字符串';
 
-  chkSendTestUDPData.Caption := '测试每1秒向本机UDP:7026端口发送Level2数据';
-  chkListening.Caption       := '监听本地UDP:7026端口';
-  chkStoreToSqlite.Caption   := '保存数据到Sqlite';
+  edtUDPPort.Text            := '7026';
+  chkSendTestUDPData.Caption := '测试每1秒向本机UDP:' + FUDPPort.ToString + '端口发送Level2数据';
+  chkListening.Caption       := '监听本地UDP:' + FUDPPort.ToString + '端口';
+  chkStoreToSqlite.Caption   := '保存数据到本地Sqlite库(ppro8.db)';
 
   self.Memo1.Clear;
   self.OnResize := self.FormResize;
@@ -183,18 +201,27 @@ var
   str   : string;
   l2line: TL2Line;
 begin
-  str := BytesToString( AData );
+  str := BytesToString( AData ).Replace( #13#10, '' ).Replace( #13, '' ).Replace( #10, '' );
   if ( Assigned( FDataProvider ) ) then
   begin
     l2line := TL2Line.FromCSVString( str );
     try
-      l2line.SaveToDataBase( FDataProvider );
+      if not l2line.SaveToDataBase( FDataProvider ) then
+          raise Exception.Create( 'save error' );
     finally
       l2line.Free;
     end;
   end;
 
-  self.Memo1.Lines.Add( BytesToString( AData ) );
+  self.Memo1.Lines.Add( str );
+end;
+
+procedure TfmTest.Init;
+begin
+  chkStoreToSqlite.Checked := True;
+  chkListening.Checked     := True;
+  // chkStoreToSqliteClick( chkStoreToSqlite );
+  // chkListeningClick( chkListening );
 end;
 
 procedure TfmTest.tmrLabelFormSizeDisplayTimer( Sender: TObject );
