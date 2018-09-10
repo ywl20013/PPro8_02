@@ -15,7 +15,8 @@ uses
   Vcl.Controls,
   Vcl.Forms,
   Vcl.Dialogs,
-  Vcl.StdCtrls;
+  Vcl.StdCtrls,
+  Vcl.ExtCtrls;
 
 type
   TfmTest = class( TForm )
@@ -23,12 +24,15 @@ type
     Memo1: TMemo;
     chkListening: TCheckBox;
     chkSendTestUDPData: TCheckBox;
+    tmrLabelFormSizeDisplay: TTimer;
     procedure btn1Click( Sender: TObject );
     procedure FormCreate( Sender: TObject );
     procedure chkListeningClick( Sender: TObject );
     procedure chkSendTestUDPDataClick( Sender: TObject );
+    procedure tmrLabelFormSizeDisplayTimer( Sender: TObject );
+    procedure FormResize( Sender: TObject );
   private
-
+    FLabelFormSizeDisplay: TLabel;
     procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
       const AData: TIdBytes; ABinding: TIdSocketHandle );
   public
@@ -112,19 +116,52 @@ end;
 
 procedure TfmTest.FormCreate( Sender: TObject );
 begin
+  self.OnResize  := nil;
   self.Font.Name := 'Consolas';
   self.Font.Size := 10;
   self.Caption   := '测试';
+  self.Width     := 870;
   btn1.Caption   := '测试解析Level2 csv字符串';
 
   chkSendTestUDPData.Caption := '测试每1秒向本机UDP:7026端口发送Level2数据';
   chkListening.Caption       := '监听本地UDP:7026端口';
+
+  self.Memo1.Clear;
+  self.OnResize := self.FormResize;
+end;
+
+procedure TfmTest.FormResize( Sender: TObject );
+begin
+
+  if not Assigned( FLabelFormSizeDisplay ) then
+  begin
+    FLabelFormSizeDisplay        := TLabel.Create( self );
+    FLabelFormSizeDisplay.Left   := 8;
+    FLabelFormSizeDisplay.Top    := 8;
+    FLabelFormSizeDisplay.Parent := self;
+    FLabelFormSizeDisplay.BringToFront;
+  end;
+  if Assigned( FLabelFormSizeDisplay ) then
+      FLabelFormSizeDisplay.Caption := Format( 'width=%d,height=%d', [ self.Width, self.Height ] );
+  tmrLabelFormSizeDisplay.Enabled   := False;
+  tmrLabelFormSizeDisplay.Enabled   := True;
+
 end;
 
 procedure TfmTest.IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
   const AData: TIdBytes; ABinding: TIdSocketHandle );
 begin
   self.Memo1.Lines.Add( BytesToString( AData ) );
+end;
+
+procedure TfmTest.tmrLabelFormSizeDisplayTimer( Sender: TObject );
+begin
+  if Assigned( FLabelFormSizeDisplay ) then begin
+    FLabelFormSizeDisplay.Free;
+    FLabelFormSizeDisplay := nil;
+  end;
+
+  TTimer( Sender ).Enabled := False;
 end;
 
 end.

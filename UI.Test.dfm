@@ -11,6 +11,7 @@ object fmTest: TfmTest
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   OnCreate = FormCreate
   DesignSize = (
     635
@@ -19,7 +20,7 @@ object fmTest: TfmTest
   TextHeight = 13
   object btn1: TButton
     Left = 8
-    Top = 8
+    Top = 43
     Width = 273
     Height = 25
     Caption = 'btn1'
@@ -53,5 +54,12 @@ object fmTest: TfmTest
     Caption = 'chkSendTestUDPData'
     TabOrder = 1
     OnClick = chkSendTestUDPDataClick
+  end
+  object tmrLabelFormSizeDisplay: TTimer
+    Enabled = False
+    Interval = 1500
+    OnTimer = tmrLabelFormSizeDisplayTimer
+    Left = 336
+    Top = 16
   end
 end
