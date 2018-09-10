@@ -34,7 +34,7 @@ implementation
 
 uses
   Models.L2,
-  Data.Provider.UDP;
+  Data.Provider.UDP.Test;
 
 {$R *.dfm}
 

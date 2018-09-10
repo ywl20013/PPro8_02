@@ -6,7 +6,7 @@ uses
   Models.L2 in 'Models\Models.L2.pas',
   UI.Test in 'UI.Test.pas' {fmTest},
   Helper.TDateTime in 'Helper\Helper.TDateTime.pas',
-  Data.Provider.UDP in 'Data\Provider\Data.Provider.UDP.pas' {dmProviderUDP: TDataModule};
+  Data.Provider.UDP.Test in 'Data\Provider\Data.Provider.UDP.Test.pas' {dmProviderUDP: TDataModule};
 
 {$R *.res}
 
@@ -16,7 +16,6 @@ begin
   Application.MainFormOnTaskbar := True;
   // Application.CreateForm(TfmMain, fmMain);
   Application.CreateForm(TfmTest, fmTest);
-  Application.CreateForm(TdmProviderUDP, dmProviderUDP);
   Application.Run;
 
 end.
