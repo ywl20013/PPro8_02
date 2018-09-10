@@ -88,7 +88,9 @@ type
 implementation
 
 uses
-  DateTimeHelper;
+  Helper.TDateTime;
+
+
 
 { TL2Line }
 

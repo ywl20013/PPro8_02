@@ -8,4 +8,9 @@ object dmProviderUDP: TdmProviderUDP
     Left = 88
     Top = 56
   end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 144
+    Top = 24
+  end
 end
