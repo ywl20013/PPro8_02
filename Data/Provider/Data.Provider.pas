@@ -1,13 +1,10 @@
-unit Data.Provider.Sqlite;
+unit Data.Provider;
 
 interface
 
 uses
   System.SysUtils,
   System.Classes,
-  FireDAC.DApt,
-  FireDAC.Stan.ExprFuncs,
-  FireDAC.Phys.SQLiteDef,
   FireDAC.Stan.Intf,
   FireDAC.Stan.Option,
   FireDAC.Stan.Error,
@@ -19,29 +16,25 @@ uses
   FireDAC.Phys,
   FireDAC.VCLUI.Wait,
   Data.DB,
-  FireDAC.Comp.Client,
-  FireDAC.Phys.Sqlite;
+  FireDAC.Comp.Client;
 
 type
-  TdmDataProviderSqlite = class( TDataModule )
-    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
+  TDataProvider = class( TDataModule )
     Connection: TFDConnection;
-    procedure DataModuleCreate( Sender: TObject );
   private
     function GetActive: Boolean;
     procedure SetActive( const Value: Boolean );
-    { Private declarations }
   public
     function DataExists( ASql: string ): Boolean;
     function ExecuteSql( ASql: string ): Boolean;
 
-    function TableExists( TableName: string ): Boolean;
+    function TableExists( TableName: string ): Boolean; virtual;
   published
     property Active: Boolean read GetActive write SetActive;
   end;
 
 var
-  dmDataProviderSqlite: TdmDataProviderSqlite;
+  DataProvider: TDataProvider;
 
 implementation
 
@@ -49,8 +42,9 @@ implementation
 
 {$R *.dfm}
 
+{ TDataProvider }
 
-function TdmDataProviderSqlite.DataExists( ASql: string ): Boolean;
+function TDataProvider.DataExists( ASql: string ): Boolean;
 var
   query: TFDQuery;
 begin
@@ -66,13 +60,7 @@ begin
   end;
 end;
 
-procedure TdmDataProviderSqlite.DataModuleCreate( Sender: TObject );
-begin
-  Connection.DriverName      := 'SQLite';
-  Connection.Params.Database := 'ppro8.db';
-end;
-
-function TdmDataProviderSqlite.ExecuteSql( ASql: string ): Boolean;
+function TDataProvider.ExecuteSql( ASql: string ): Boolean;
 var
   query: TFDQuery;
 begin
@@ -89,21 +77,19 @@ begin
   end;
 end;
 
-function TdmDataProviderSqlite.GetActive: Boolean;
+function TDataProvider.GetActive: Boolean;
 begin
   Result := Connection.Connected;
 end;
 
-procedure TdmDataProviderSqlite.SetActive( const Value: Boolean );
+procedure TDataProvider.SetActive( const Value: Boolean );
 begin
   Connection.Open( );
 end;
 
-function TdmDataProviderSqlite.TableExists( TableName: string ): Boolean;
+function TDataProvider.TableExists( TableName: string ): Boolean;
 begin
-  // select * from sqlite_master where type = 'table' and name = 't_cmpt_cp'
-  Result := DataExists( Format( 'select 1 from sqlite_master where type = ''table'' ' +
-    'and name = ''%s''', [ TableName ] ) );
+  raise Exception.Create( 'TableExists 内部代码没有实现' );
 end;
 
 end.

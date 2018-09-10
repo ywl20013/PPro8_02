@@ -7,7 +7,7 @@ object dmDataProviderSqlite: TdmDataProviderSqlite
     Left = 64
     Top = 72
   end
-  object FDConnection1: TFDConnection
+  object Connection: TFDConnection
     Left = 16
     Top = 16
   end

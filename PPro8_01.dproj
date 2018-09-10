@@ -109,12 +109,12 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Helper\Helper.TDateTime.pas"/>
-        <DCCReference Include="Data\Provider\UDP\Data.Provider.UDP.Test.pas">
+        <DCCReference Include="Net\UDP\Net.UDP.Test.pas">
             <Form>dmProviderUDPTest</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="Data\Provider\UDP\Data.Provider.UDP.Server.pas">
+        <DCCReference Include="Net\UDP\Net.UDP.Server.pas">
             <Form>dmProviderUDPServer</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
@@ -126,6 +126,11 @@
         </DCCReference>
         <DCCReference Include="Data\Provider\Sqlite\Data.Provider.Sqlite.L2.pas">
             <Form>dmDataProviderSqliteL2</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Data\Provider\Data.Provider.pas">
+            <Form>DataProvider</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>

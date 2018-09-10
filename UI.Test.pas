@@ -48,9 +48,9 @@ implementation
 
 uses
   Models.L2,
-  Data.Provider.UDP.Test,
-  Data.Provider.UDP.Server,
-  Data.Provider.Sqlite;
+  Net.UDP.Test,
+  Net.UDP.Server,
+  Data.Provider.Sqlite.L2;
 
 {$R *.dfm}
 
@@ -121,17 +121,19 @@ procedure TfmTest.chkStoreToSqliteClick( Sender: TObject );
 begin
   if TCheckBox( Sender ).Checked then
   begin
-    if ( not Assigned( dmDataProviderSqlite ) ) then
+    if ( not Assigned( dmDataProviderSqliteL2 ) ) then
     begin
-      dmDataProviderSqlite := TdmDataProviderSqlite.Create( Application );
+      dmDataProviderSqliteL2 := TdmDataProviderSqliteL2.Create( Application );
     end;
-    dmDataProviderSqlite.Active := True;
+    dmDataProviderSqliteL2.Active := True;
+
+    dmDataProviderSqliteL2.CheckTables;
   end
   else
   begin
-    if ( Assigned( dmDataProviderSqlite ) ) then
+    if ( Assigned( dmDataProviderSqliteL2 ) ) then
     begin
-      dmDataProviderSqlite.Active := False;
+      dmDataProviderSqliteL2.Active := False;
     end;
   end;
 end;
