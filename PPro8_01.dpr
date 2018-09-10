@@ -8,9 +8,9 @@ uses
   Helper.TDateTime in 'Helper\Helper.TDateTime.pas',
   Net.UDP.Test in 'Net\UDP\Net.UDP.Test.pas' {dmProviderUDPTest: TDataModule},
   Net.UDP.Server in 'Net\UDP\Net.UDP.Server.pas' {dmProviderUDPServer: TDataModule},
-  Data.Provider.Sqlite in 'Data\Provider\Sqlite\Data.Provider.Sqlite.pas' {dmDataProviderSqlite: TDataModule},
   Data.Provider.Sqlite.L2 in 'Data\Provider\Sqlite\Data.Provider.Sqlite.L2.pas' {dmDataProviderSqliteL2: TDataModule},
-  Data.Provider in 'Data\Provider\Data.Provider.pas' {DataProvider: TDataModule};
+  Data.Provider in 'Data\Provider\Data.Provider.pas' {DataProvider: TDataModule},
+  Data.Provider.Sqlite in 'Data\Provider\Sqlite\Data.Provider.Sqlite.pas' {dmDataProviderSqlite: TDataModule};
 
 {$R *.res}
 
@@ -22,6 +22,7 @@ begin
   // Application.CreateForm(TfmMain, fmMain);
   Application.CreateForm(TfmTest, fmTest);
   Application.CreateForm(TDataProvider, DataProvider);
+  Application.CreateForm(TdmDataProviderSqlite, dmDataProviderSqlite);
   Application.Run;
 
 end.

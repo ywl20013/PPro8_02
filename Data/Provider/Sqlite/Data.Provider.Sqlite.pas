@@ -5,9 +5,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
-  FireDAC.DApt,
-  FireDAC.Stan.ExprFuncs,
-  FireDAC.Phys.SQLiteDef,
+  Data.Provider,
   FireDAC.Stan.Intf,
   FireDAC.Stan.Option,
   FireDAC.Stan.Error,
@@ -18,26 +16,22 @@ uses
   FireDAC.Stan.Async,
   FireDAC.Phys,
   FireDAC.VCLUI.Wait,
+  FireDAC.Stan.ExprFuncs,
+  FireDAC.Phys.SQLiteDef,
+  FireDAC.Phys.SQLite,
   Data.DB,
-  FireDAC.Comp.Client,
-  FireDAC.Phys.Sqlite;
+  FireDAC.Comp.Client;
 
 type
-  TdmDataProviderSqlite = class( TDataModule )
+  TdmDataProviderSqlite = class( TDataProvider )
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
-    Connection: TFDConnection;
-    procedure DataModuleCreate( Sender: TObject );
   private
-    function GetActive: Boolean;
-    procedure SetActive( const Value: Boolean );
     { Private declarations }
   public
-    function DataExists( ASql: string ): Boolean;
-    function ExecuteSql( ASql: string ): Boolean;
+    constructor Create( AOwner: TComponent ); override;
 
-    function TableExists( TableName: string ): Boolean;
-  published
-    property Active: Boolean read GetActive write SetActive;
+    function TableExists( TableName: string ): Boolean; override;
+
   end;
 
 var
@@ -50,58 +44,15 @@ implementation
 {$R *.dfm}
 
 
-function TdmDataProviderSqlite.DataExists( ASql: string ): Boolean;
-var
-  query: TFDQuery;
+constructor TdmDataProviderSqlite.Create( AOwner: TComponent );
 begin
-  query := TFDQuery.Create( self );
-  try
-    query.Connection := self.Connection;
-    query.Open( ASql );
-    Result := query.RecordCount > 0;
-    query.Free;
-  except
-    Result := false;
-    query.Free;
-  end;
-end;
-
-procedure TdmDataProviderSqlite.DataModuleCreate( Sender: TObject );
-begin
+  inherited;
   Connection.DriverName      := 'SQLite';
   Connection.Params.Database := 'ppro8.db';
 end;
 
-function TdmDataProviderSqlite.ExecuteSql( ASql: string ): Boolean;
-var
-  query: TFDQuery;
-begin
-  query := TFDQuery.Create( self );
-  try
-    query.Connection := self.Connection;
-    query.Sql.Text   := ASql;
-    query.ExecSQL;
-    Result := true;
-    query.Free;
-  except
-    Result := false;
-    query.Free;
-  end;
-end;
-
-function TdmDataProviderSqlite.GetActive: Boolean;
-begin
-  Result := Connection.Connected;
-end;
-
-procedure TdmDataProviderSqlite.SetActive( const Value: Boolean );
-begin
-  Connection.Open( );
-end;
-
 function TdmDataProviderSqlite.TableExists( TableName: string ): Boolean;
 begin
-  // select * from sqlite_master where type = 'table' and name = 't_cmpt_cp'
   Result := DataExists( Format( 'select 1 from sqlite_master where type = ''table'' ' +
     'and name = ''%s''', [ TableName ] ) );
 end;

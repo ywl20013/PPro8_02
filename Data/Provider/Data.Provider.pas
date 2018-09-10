@@ -5,6 +5,7 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  FireDAC.DApt,
   FireDAC.Stan.Intf,
   FireDAC.Stan.Option,
   FireDAC.Stan.Error,
