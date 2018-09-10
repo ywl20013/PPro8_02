@@ -59,7 +59,7 @@ object fmTest: TfmTest
     Enabled = False
     Interval = 1500
     OnTimer = tmrLabelFormSizeDisplayTimer
-    Left = 336
-    Top = 16
+    Left = 400
+    Top = 8
   end
 end
