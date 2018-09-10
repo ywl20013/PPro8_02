@@ -30,7 +30,7 @@ type
     { Private declarations }
   public
     function CheckTables: Boolean;
-    function SaveL2Line( L2Line: TL2Line ): Boolean;
+    // function SaveL2Line( L2Line: TL2Line ): Boolean;
   end;
 
 var
@@ -52,7 +52,7 @@ begin
   begin
     asql :=
       'CREATE TABLE L2Lines(' +
-      '   ID INT PRIMARY KEY          NOT NULL,' +
+      '   ID INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,' +
       '   NAME           TEXT         NOT NULL,' +
       '   LOCALTIME      DATETIME     NOT NULL default (datetime(''now'', ''localtime'')),' +
       '   MARKETTIME     DATETIME     NOT NULL,' +
@@ -67,9 +67,12 @@ begin
   end;
 end;
 
-function TdmDataProviderSqliteL2.SaveL2Line( L2Line: TL2Line ): Boolean;
-begin
-
-end;
+// function TdmDataProviderSqliteL2.SaveL2Line( L2Line: TL2Line ): Boolean;
+// begin
+// Result := self.ExecuteSql( 'insert into L2Lines(NAME,LOCALTIME,MARKETTIME,MMID,SIDE,PRICE,VOLUME,DEPTH,SEQUENCENUMBER)' +
+// ' values(:NAME,:LOCALTIME,:MARKETTIME,:MMID,:SIDE,:PRICE,:VOLUME,:DEPTH,:SEQUENCENUMBER)', [
+// L2Line.Symbol, L2Line.LocalTime, L2Line.MarketTime, L2Line.Mmid, L2Line.Side, L2Line.Price, L2Line.Volume, L2Line.Depth, L2Line.SequenceNumber
+// ] );
+// end;
 
 end.

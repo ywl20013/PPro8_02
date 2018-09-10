@@ -8,6 +8,7 @@ uses
   System.SysUtils,
   System.Variants,
   System.Classes,
+  Data.Provider,
   IdUDPServer,
   IdGlobal,
   IdSocketHandle,
@@ -35,10 +36,13 @@ type
     procedure chkStoreToSqliteClick( Sender: TObject );
   private
     FLabelFormSizeDisplay: TLabel;
+
+    FDataProvider: TDataProvider;
+
     procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
       const AData: TIdBytes; ABinding: TIdSocketHandle );
   public
-    { Public declarations }
+
   end;
 
 var
@@ -121,19 +125,19 @@ procedure TfmTest.chkStoreToSqliteClick( Sender: TObject );
 begin
   if TCheckBox( Sender ).Checked then
   begin
-    if ( not Assigned( dmDataProviderSqliteL2 ) ) then
+    if ( not Assigned( FDataProvider ) ) then
     begin
-      dmDataProviderSqliteL2 := TdmDataProviderSqliteL2.Create( Application );
+      FDataProvider := TdmDataProviderSqliteL2.Create( Application );
     end;
-    dmDataProviderSqliteL2.Active := True;
+    FDataProvider.Active := True;
 
-    dmDataProviderSqliteL2.CheckTables;
+    TdmDataProviderSqliteL2( FDataProvider ).CheckTables;
   end
   else
   begin
-    if ( Assigned( dmDataProviderSqliteL2 ) ) then
+    if ( Assigned( FDataProvider ) ) then
     begin
-      dmDataProviderSqliteL2.Active := False;
+      FDataProvider.Active := False;
     end;
   end;
 end;
@@ -144,7 +148,7 @@ begin
   self.Font.Name := 'Consolas';
   self.Font.Size := 10;
   self.Caption   := '测试';
-  self.Width     := 870;
+  self.Width     := 1000;
   btn1.Caption   := '测试解析Level2 csv字符串';
 
   chkSendTestUDPData.Caption := '测试每1秒向本机UDP:7026端口发送Level2数据';
@@ -175,13 +179,28 @@ end;
 
 procedure TfmTest.IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
   const AData: TIdBytes; ABinding: TIdSocketHandle );
+var
+  str   : string;
+  l2line: TL2Line;
 begin
+  str := BytesToString( AData );
+  if ( Assigned( FDataProvider ) ) then
+  begin
+    l2line := TL2Line.FromCSVString( str );
+    try
+      l2line.SaveToDataBase( FDataProvider );
+    finally
+      l2line.Free;
+    end;
+  end;
+
   self.Memo1.Lines.Add( BytesToString( AData ) );
 end;
 
 procedure TfmTest.tmrLabelFormSizeDisplayTimer( Sender: TObject );
 begin
-  if Assigned( FLabelFormSizeDisplay ) then begin
+  if Assigned( FLabelFormSizeDisplay ) then
+  begin
     FLabelFormSizeDisplay.Free;
     FLabelFormSizeDisplay := nil;
   end;

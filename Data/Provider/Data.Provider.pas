@@ -27,7 +27,8 @@ type
     procedure SetActive( const Value: Boolean );
   public
     function DataExists( ASql: string ): Boolean;
-    function ExecuteSql( ASql: string ): Boolean;
+    function ExecuteSql( ASql: string ): Boolean; overload;
+    function ExecuteSql( ASql: string; const AParams: array of Variant ): Boolean; overload;
 
     function TableExists( TableName: string ): Boolean; virtual;
   published
@@ -70,6 +71,22 @@ begin
     query.Connection := self.Connection;
     query.Sql.Text   := ASql;
     query.ExecSQL;
+    Result := true;
+    query.Free;
+  except
+    Result := false;
+    query.Free;
+  end;
+end;
+
+function TDataProvider.ExecuteSql( ASql: string; const AParams: array of Variant ): Boolean;
+var
+  query: TFDQuery;
+begin
+  query := TFDQuery.Create( self );
+  try
+    query.Connection := self.Connection;
+    query.ExecSQL( ASql, AParams );
     Result := true;
     query.Free;
   except

@@ -2,7 +2,8 @@ unit Models.L2;
 
 interface
 
-uses System.SysUtils;
+uses System.SysUtils,
+  Data.Provider;
 
 type
   {
@@ -37,19 +38,27 @@ type
   /// </summary>
   TL2Line = class
   private
-    FMarketTime: TDateTime;
-    FPrice: Double;
-    FDepth: Cardinal;
-    FLocalTime: TDateTime;
-    FSide: String;
-    FVolume: Cardinal;
+    FMarketTime    : TDateTime;
+    FPrice         : Double;
+    FDepth         : Cardinal;
+    FLocalTime     : TDateTime;
+    FSide          : String;
+    FVolume        : Cardinal;
     FSequenceNumber: Cardinal;
-    FMmid: string;
+    FMmid          : string;
+    FSymbol        : string;
   public
-    class function FromCSVString(source: string): TL2Line;
+    class function FromCSVString( source: string ): TL2Line;
 
-    function ToCSVString(): string;
+    function ToCSVString( ): string;
+
+    function SaveToDataBase( DataProvider: TDataProvider ): Boolean;
+
   published
+    /// <summary>
+    /// 数据到达本地电脑的时间，按本地电脑的时间显示
+    /// </summary>
+    property Symbol: string read FSymbol write FSymbol;
     /// <summary>
     /// 数据到达本地电脑的时间，按本地电脑的时间显示
     /// </summary>
@@ -90,61 +99,93 @@ implementation
 uses
   Helper.TDateTime;
 
-
-
 { TL2Line }
 
-class function TL2Line.FromCSVString(source: string): TL2Line;
+class function TL2Line.FromCSVString( source: string ): TL2Line;
 var
-  strs: TArray<string>;
-  strs2: TArray<string>;
+  pair, name, value: string;
+  strs, strs2      : TArray< string >;
 begin
-  strs := source.Split([',']);
+  strs   := source.Split( [ ',' ] );
   Result := self.Create;
-  strs2 := strs[0].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FLocalTime := TDateTime.Create(strs[0].Split(['='])[1]);
+  for pair in strs do
+  begin
+    strs2 := pair.Split( [ '=' ] );
+    if ( Length( strs2 ) = 2 ) then
+    begin
+      name  := strs2[ 0 ];
+      value := strs2[ 1 ];
+      if LowerCase( name ) = LowerCase( 'Symbol' ) then
+      begin
+        Result.FSymbol := value;
+      end
+      else if LowerCase( name ) = LowerCase( 'LocalTime' ) then
+      begin
+        Result.FLocalTime := TDateTime.Create( value );
+      end
+      else if LowerCase( name ) = LowerCase( 'MarketTime' ) then
+      begin
+        Result.FMarketTime := TDateTime.Create( value );
+      end
+      else if LowerCase( name ) = LowerCase( 'Mmid' ) then
+      begin
+        Result.FMmid := value;
+      end
+      else if LowerCase( name ) = LowerCase( 'Side' ) then
+      begin
+        Result.FSide := value;
+      end
+      else if LowerCase( name ) = LowerCase( 'Price' ) then
+      begin
+        Result.FPrice := value.ToDouble( );
+      end
+      else if LowerCase( name ) = LowerCase( 'Volume' ) then
+      begin
+        Result.FVolume := value.ToInteger( );
+      end
+      else if LowerCase( name ) = LowerCase( 'Depth' ) then
+      begin
+        Result.FDepth := value.ToInteger( );
+      end
+      else if LowerCase( name ) = LowerCase( 'SequenceNumber' ) then
+      begin
+        Result.FSequenceNumber := value.ToInteger( );
+      end
 
-  strs2 := strs[1].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FMarketTime := TDateTime.Create(strs[1].Split(['='])[1]);
+    end;
+  end;
 
-  strs2 := strs[2].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FMmid := strs[2].Split(['='])[1];
+end;
 
-  strs2 := strs[3].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FSide := strs[3].Split(['='])[1];
-
-  strs2 := strs[4].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FPrice := (strs[4].Split(['='])[1]).ToDouble();
-
-  strs2 := strs[5].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FVolume := (strs[5].Split(['='])[1]).ToInteger();
-
-  strs2 := strs[6].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FDepth := (strs[6].Split(['='])[1]).ToInteger();
-
-  strs2 := strs[7].Split(['=']);
-  if (Length(strs2) = 2) then
-    Result.FSequenceNumber := (strs[7].Split(['='])[1]).ToInteger();
+function TL2Line.SaveToDataBase( DataProvider: TDataProvider ): Boolean;
+begin
+  Result := DataProvider.ExecuteSql( 'insert into L2Lines(NAME,LOCALTIME,MARKETTIME,MMID,SIDE,PRICE,VOLUME,DEPTH,SEQUENCENUMBER)' +
+    ' values(:NAME,:LOCALTIME,:MARKETTIME,:MMID,:SIDE,:PRICE,:VOLUME,:DEPTH,:SEQUENCENUMBER)', [
+    self.Symbol,
+    self.LocalTime,
+    self.MarketTime,
+    self.Mmid,
+    self.Side,
+    self.Price,
+    self.Volume,
+    self.Depth,
+    self.SequenceNumber
+    ] );
 end;
 
 function TL2Line.ToCSVString: string;
 begin
-  Result := Format('LocalTime=%s,', [self.FLocalTime.ToString('HH:mm:ss.zzz')]);
-  Result := Result + Format('MarketTime=%s,',
-    [self.FMarketTime.ToString('HH:mm:ss.zzz')]);
-  Result := Result + Format('Mmid=%s,', [self.FMmid]);
-  Result := Result + Format('Side=%s,', [self.FSide]);
-  Result := Result + Format('Price=%f,', [self.FPrice]);
-  Result := Result + Format('Volume=%d,', [self.FVolume]);
-  Result := Result + Format('Depth=%d,', [self.FDepth]);
-  Result := Result + Format('SequenceNumber=%d', [self.FSequenceNumber]);
+  Result := Format( 'Symbol=%s,', [ self.FSymbol ] );
+  Result := Result + Format( 'LocalTime=%s,',
+    [ self.FLocalTime.ToString( 'HH:mm:ss.zzz' ) ] );
+  Result := Result + Format( 'MarketTime=%s,',
+    [ self.FMarketTime.ToString( 'HH:mm:ss.zzz' ) ] );
+  Result := Result + Format( 'Mmid=%s,', [ self.FMmid ] );
+  Result := Result + Format( 'Side=%s,', [ self.FSide ] );
+  Result := Result + Format( 'Price=%f,', [ self.FPrice ] );
+  Result := Result + Format( 'Volume=%d,', [ self.FVolume ] );
+  Result := Result + Format( 'Depth=%d,', [ self.FDepth ] );
+  Result := Result + Format( 'SequenceNumber=%d', [ self.FSequenceNumber ] );
 end;
 
 end.
