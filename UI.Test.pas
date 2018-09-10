@@ -25,12 +25,14 @@ type
     chkListening: TCheckBox;
     chkSendTestUDPData: TCheckBox;
     tmrLabelFormSizeDisplay: TTimer;
+    chkStoreToSqlite: TCheckBox;
     procedure btn1Click( Sender: TObject );
     procedure FormCreate( Sender: TObject );
     procedure chkListeningClick( Sender: TObject );
     procedure chkSendTestUDPDataClick( Sender: TObject );
     procedure tmrLabelFormSizeDisplayTimer( Sender: TObject );
     procedure FormResize( Sender: TObject );
+    procedure chkStoreToSqliteClick( Sender: TObject );
   private
     FLabelFormSizeDisplay: TLabel;
     procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
@@ -47,7 +49,8 @@ implementation
 uses
   Models.L2,
   Data.Provider.UDP.Test,
-  Data.Provider.UDP.Server;
+  Data.Provider.UDP.Server,
+  Data.Provider.Sqlite;
 
 {$R *.dfm}
 
@@ -114,6 +117,25 @@ begin
   end;
 end;
 
+procedure TfmTest.chkStoreToSqliteClick( Sender: TObject );
+begin
+  if TCheckBox( Sender ).Checked then
+  begin
+    if ( not Assigned( dmDataProviderSqlite ) ) then
+    begin
+      dmDataProviderSqlite := TdmDataProviderSqlite.Create( Application );
+    end;
+    dmDataProviderSqlite.Active := True;
+  end
+  else
+  begin
+    if ( Assigned( dmDataProviderSqlite ) ) then
+    begin
+      dmDataProviderSqlite.Active := False;
+    end;
+  end;
+end;
+
 procedure TfmTest.FormCreate( Sender: TObject );
 begin
   self.OnResize  := nil;
@@ -125,6 +147,7 @@ begin
 
   chkSendTestUDPData.Caption := '测试每1秒向本机UDP:7026端口发送Level2数据';
   chkListening.Caption       := '监听本地UDP:7026端口';
+  chkStoreToSqlite.Caption   := '保存数据到Sqlite';
 
   self.Memo1.Clear;
   self.OnResize := self.FormResize;

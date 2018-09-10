@@ -1,0 +1,2 @@
+inherited dmDataProviderSqliteL2: TdmDataProviderSqliteL2
+end

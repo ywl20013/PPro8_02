@@ -29,13 +29,13 @@ object fmTest: TfmTest
   end
   object Memo1: TMemo
     Left = 8
-    Top = 128
+    Top = 176
     Width = 619
-    Height = 163
+    Height = 115
     Anchors = [akLeft, akTop, akRight, akBottom]
     Lines.Strings = (
       'Memo1')
-    TabOrder = 3
+    TabOrder = 4
   end
   object chkListening: TCheckBox
     Left = 8
@@ -54,6 +54,15 @@ object fmTest: TfmTest
     Caption = 'chkSendTestUDPData'
     TabOrder = 1
     OnClick = chkSendTestUDPDataClick
+  end
+  object chkStoreToSqlite: TCheckBox
+    Left = 8
+    Top = 120
+    Width = 449
+    Height = 17
+    Caption = 'chkStoreToSqlite'
+    TabOrder = 3
+    OnClick = chkStoreToSqliteClick
   end
   object tmrLabelFormSizeDisplay: TTimer
     Enabled = False
