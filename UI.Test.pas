@@ -8,6 +8,9 @@ uses
   System.SysUtils,
   System.Variants,
   System.Classes,
+  IdUDPServer,
+  IdGlobal,
+  IdSocketHandle,
   Vcl.Graphics,
   Vcl.Controls,
   Vcl.Forms,
@@ -17,12 +20,17 @@ uses
 type
   TfmTest = class( TForm )
     btn1: TButton;
-    btnStartUDP: TButton;
+    Memo1: TMemo;
+    chkListening: TCheckBox;
+    chkSendTestUDPData: TCheckBox;
     procedure btn1Click( Sender: TObject );
     procedure FormCreate( Sender: TObject );
-    procedure btnStartUDPClick( Sender: TObject );
+    procedure chkListeningClick( Sender: TObject );
+    procedure chkSendTestUDPDataClick( Sender: TObject );
   private
-    { Private declarations }
+
+    procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
+      const AData: TIdBytes; ABinding: TIdSocketHandle );
   public
     { Public declarations }
   end;
@@ -34,7 +42,8 @@ implementation
 
 uses
   Models.L2,
-  Data.Provider.UDP.Test;
+  Data.Provider.UDP.Test,
+  Data.Provider.UDP.Server;
 
 {$R *.dfm}
 
@@ -60,17 +69,62 @@ begin
   end;
 end;
 
-procedure TfmTest.btnStartUDPClick( Sender: TObject );
+procedure TfmTest.chkListeningClick( Sender: TObject );
 begin
-  dmProviderUDP        := TdmProviderUDP.Create( Application );
-  dmProviderUDP.Port   := 7026;
-  dmProviderUDP.Active := True;
+  if TCheckBox( Sender ).Checked then
+  begin
+    if ( not Assigned( dmProviderUDPTest ) ) then
+    begin
+      dmProviderUDPTest      := TdmProviderUDPTest.Create( Application );
+      dmProviderUDPTest.Port := 7026;
+    end;
+    dmProviderUDPTest.Active := True;
+  end
+  else
+  begin
+    if ( Assigned( dmProviderUDPTest ) ) then
+    begin
+      dmProviderUDPTest.Active := False;
+    end;
+  end;
+end;
+
+procedure TfmTest.chkSendTestUDPDataClick( Sender: TObject );
+begin
+  if TCheckBox( Sender ).Checked then
+  begin
+    if ( not Assigned( dmProviderUDPServer ) ) then
+    begin
+      dmProviderUDPServer           := TdmProviderUDPServer.Create( Application );
+      dmProviderUDPServer.Port      := 7026;
+      dmProviderUDPServer.OnUDPRead := self.IdUDPServerUDPRead;
+    end;
+    dmProviderUDPServer.Active := True;
+  end
+  else
+  begin
+    if ( Assigned( dmProviderUDPServer ) ) then
+    begin
+      dmProviderUDPServer.Active := False;
+    end;
+  end;
 end;
 
 procedure TfmTest.FormCreate( Sender: TObject );
 begin
-  self.Caption := '²âÊÔ';
-  btn1.Caption := '²âÊÔ½âÎöLevel2 csv×Ö·û´®';
+  self.Font.Name := 'Consolas';
+  self.Font.Size := 10;
+  self.Caption   := '²âÊÔ';
+  btn1.Caption   := '²âÊÔ½âÎöLevel2 csv×Ö·û´®';
+
+  chkSendTestUDPData.Caption := '²âÊÔÃ¿1ÃëÏò±¾»úUDP:7026¶Ë¿Ú·¢ËÍLevel2Êý¾Ý';
+  chkListening.Caption       := '¼àÌý±¾µØUDP:7026¶Ë¿Ú';
+end;
+
+procedure TfmTest.IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
+  const AData: TIdBytes; ABinding: TIdSocketHandle );
+begin
+  self.Memo1.Lines.Add( BytesToString( AData ) );
 end;
 
 end.

@@ -110,7 +110,12 @@
         </DCCReference>
         <DCCReference Include="Helper\Helper.TDateTime.pas"/>
         <DCCReference Include="Data\Provider\Data.Provider.UDP.Test.pas">
-            <Form>dmProviderUDP</Form>
+            <Form>dmProviderUDPTest</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Data\Provider\Data.Provider.UDP.Server.pas">
+            <Form>dmProviderUDPServer</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>

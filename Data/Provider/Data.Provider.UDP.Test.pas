@@ -8,13 +8,13 @@ uses
   IdBaseComponent,
   IdComponent,
   IdUDPBase,
-  IdUDPServer,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls,
+  IdUDPClient;
 
 type
-  TdmProviderUDP = class( TDataModule )
-    IdUDPServer1: TIdUDPServer;
+  TdmProviderUDPTest = class( TDataModule )
     Timer1: TTimer;
+    IdUDPClient1: TIdUDPClient;
     procedure Timer1Timer( Sender: TObject );
   private
     FPort: Word;
@@ -27,7 +27,7 @@ type
   end;
 
 var
-  dmProviderUDP: TdmProviderUDP;
+  dmProviderUDPTest: TdmProviderUDPTest;
 
 implementation
 
@@ -40,19 +40,19 @@ uses
 
 { TdmProviderUDP }
 
-function TdmProviderUDP.GetActive: Boolean;
+function TdmProviderUDPTest.GetActive: Boolean;
 begin
-  Result := self.IdUDPServer1.Active;
+  Result := self.Timer1.Enabled;
 end;
 
-procedure TdmProviderUDP.SetActive( const Value: Boolean );
+procedure TdmProviderUDPTest.SetActive( const Value: Boolean );
 begin
-  self.IdUDPServer1.DefaultPort := self.FPort;
-  self.IdUDPServer1.Active      := Value;
-  Timer1.Enabled                := Value;
+  self.IdUDPClient1.Host := '127.0.0.1';
+  self.IdUDPClient1.Port := self.FPort;
+  Timer1.Enabled         := Value;
 end;
 
-procedure TdmProviderUDP.Timer1Timer( Sender: TObject );
+procedure TdmProviderUDPTest.Timer1Timer( Sender: TObject );
 var
   L2: TL2Line;
 begin
@@ -66,14 +66,14 @@ begin
   L2.Depth          := 1;
   L2.SequenceNumber := 27003;
   try
-    self.IdUDPServer1.Send( '127.0.0.1', 7026, L2.ToCSVString );
+    self.IdUDPClient1.Send( '127.0.0.1', 7026, L2.ToCSVString );
 
     L2.LocalTime  := Now;
     L2.MarketTime := Now;
     L2.Side       := 'e';
     L2.Price      := 1.66;
     L2.Volume     := 200;
-    self.IdUDPServer1.Send( '127.0.0.1', 7026, L2.ToCSVString );
+    self.IdUDPClient1.Send( '127.0.0.1', 7026, L2.ToCSVString );
   finally
     L2.Free;
   end;
