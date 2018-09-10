@@ -15,6 +15,9 @@
 #
 1. cmd cd.>.git-credentials
 2. git config credential.helper store
-3. [credential]  
+3. [user]  
+	email=ywl10013@126.com  
+	name=ywl10013@126.com
+4. [credential]  
 	helper = store --file .git-credentials  
 	helper = store
