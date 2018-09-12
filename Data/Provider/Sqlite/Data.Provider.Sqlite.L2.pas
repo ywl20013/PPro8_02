@@ -53,13 +53,15 @@ begin
     asql :=
       'CREATE TABLE L2Lines(' +
       '   ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
-      '   NAME           TEXT         NOT NULL,' +
-      '   LOCALTIME      DATETIME     NOT NULL default (datetime(''now'', ''localtime'')),' +
-      '   MARKETTIME     DATETIME     NOT NULL,' +
-      '   MMID           TEXT         NOT NULL,' +
-      '   SIDE           TEXT         NOT NULL,' +
-      '   PRICE          NUMERIC      NOT NULL,' +
-      '   VOLUME         INTEGER      NOT NULL,' +
+      '   RID            TEXT           NOT NULL,' +
+      '   SYMBOL         TEXT           NOT NULL,' +
+      '   LOCALTIME      DATETIME       NOT NULL default (datetime(''now'', ''localtime'')),' +
+      '   MESSAGE        TEXT           NOT NULL,' +
+      '   MARKETTIME     DATETIME       NOT NULL,' +
+      '   MMID           TEXT           NOT NULL,' +
+      '   SIDE           TEXT           NOT NULL,' +
+      '   PRICE          NUMERIC(8,2)   NOT NULL,' +
+      '   VOLUME         INTEGER        NOT NULL,' +
       '   DEPTH          INTEGER,' +
       '   SEQUENCENUMBER INTEGER' +
       ')';

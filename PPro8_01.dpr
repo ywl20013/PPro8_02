@@ -19,13 +19,11 @@ begin
   ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-{$IFDEF DEBUG}
-  Application.CreateForm( TfmTest, fmTest );
-  // fmTest.Init;
-{$ELSE}
+  // {$IFDEF DEBUG}
+  // Application.CreateForm( TfmTest, fmTest );
+  // {$ELSE}
   Application.CreateForm( TfmMain, fmMain );
-  fmMain.Init;
-{$ENDIF}
+  // {$ENDIF}
   Application.Run;
 
 end.

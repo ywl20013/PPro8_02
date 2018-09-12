@@ -102,7 +102,7 @@ end;
 
 procedure TDataProvider.SetActive( const Value: Boolean );
 begin
-  Connection.Open( );
+  Connection.Connected := Value;
 end;
 
 function TDataProvider.TableExists( TableName: string ): Boolean;

@@ -24,6 +24,8 @@ type
   public
     property Active: Boolean read GetActive write SetActive;
     property Port  : Word read FPort write FPort;
+
+    procedure Send( data: string );
   end;
 
 var
@@ -45,6 +47,13 @@ begin
   Result := self.Timer1.Enabled;
 end;
 
+procedure TdmProviderUDPTest.Send( data: string );
+begin
+  self.IdUDPClient1.Host := '127.0.0.1';
+  self.IdUDPClient1.Port := self.FPort;
+  self.IdUDPClient1.Send( data );
+end;
+
 procedure TdmProviderUDPTest.SetActive( const Value: Boolean );
 begin
   self.IdUDPClient1.Host := '127.0.0.1';
@@ -60,7 +69,7 @@ begin
   L2.LocalTime      := Now;
   L2.MarketTime     := Now;
   L2.Mmid           := 'ANON';
-  L2.Side           := 's';
+  L2.Side           := 'B';
   L2.Price          := 1.65;
   L2.Volume         := 100;
   L2.Depth          := 1;
@@ -70,7 +79,7 @@ begin
 
     L2.LocalTime  := Now;
     L2.MarketTime := Now;
-    L2.Side       := 'e';
+    L2.Side       := 'A';
     L2.Price      := 1.66;
     L2.Volume     := 200;
     self.IdUDPClient1.Send( L2.ToCSVString + #13#10 );

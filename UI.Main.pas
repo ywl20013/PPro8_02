@@ -12,31 +12,43 @@ uses
   IdUDPServer,
   IdGlobal,
   IdSocketHandle,
+  ComObj,
   Vcl.Graphics,
   Vcl.Controls,
   Vcl.Forms,
   Vcl.Dialogs,
   Vcl.StdCtrls,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls,
+  Vcl.ComCtrls;
 
 type
   TfmMain = class( TForm )
-    Memo1: TMemo;
     chkStoreToSqlite: TCheckBox;
     chkListening: TCheckBox;
     edtUDPPort: TEdit;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Memo1: TMemo;
+    ListBox1: TListBox;
+    ListBox2: TListBox;
+    Button1: TButton;
+    Splitter1: TSplitter;
+    chkCalcLevel2: TCheckBox;
     procedure FormCreate( Sender: TObject );
     procedure chkListeningClick( Sender: TObject );
     procedure chkStoreToSqliteClick( Sender: TObject );
     procedure edtUDPPortChange( Sender: TObject );
-  private
-    FDataProvider: TDataProvider;
-    FUDPPort     : Word;
+    procedure FormDestroy( Sender: TObject );
+    procedure Button1Click( Sender: TObject );
+    private
+      FDataProvider: TDataProvider;
+      FUDPPort     : Word;
 
-    procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
-      const AData: TIdBytes; ABinding: TIdSocketHandle );
-  public
-    procedure Init;
+      procedure IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
+        const AData: TIdBytes; ABinding: TIdSocketHandle );
+    public
+      procedure Init;
   end;
 
 var
@@ -46,11 +58,23 @@ implementation
 
 uses
   Models.L2,
-
+  UI.Test,
   Net.UDP.Server,
   Data.Provider.Sqlite.L2;
+
+var
+  BL2s: TL2Levels;
+  AL2s: TL2Levels;
+
 {$R *.dfm}
 
+
+procedure TfmMain.Button1Click( Sender: TObject );
+begin
+  if ( fmTest = nil ) then
+    fmTest := TfmTest.Create( Application );
+  fmTest.Show( );
+end;
 
 procedure TfmMain.chkListeningClick( Sender: TObject );
 begin
@@ -97,43 +121,83 @@ end;
 
 procedure TfmMain.edtUDPPortChange( Sender: TObject );
 begin
-  FUDPPort             := StrToUIntDef( edtUDPPort.Text, 7026 );
+  FUDPPort             := StrToIntDef( edtUDPPort.Text, 7026 );
   chkListening.Caption := '监听本地UDP:' + FUDPPort.ToString + '端口';
 end;
 
 procedure TfmMain.FormCreate( Sender: TObject );
 begin
-  self.OnResize            := nil;
-  self.Font.Name           := 'Consolas';
-  self.Font.Size           := 10;
-  self.Caption             := '获取PPro8 API 数据';
-  self.Width               := 1000;
-  edtUDPPort.Text          := '7026';
+  self.OnResize  := nil;
+  self.Font.Name := 'Consolas';
+  self.Font.Size := 10;
+  self.Caption   := '获取PPro8 API 数据';
+  // self.Width               := 1000;
+  edtUDPPort.Text          := '4135';
   chkListening.Caption     := '监听本地UDP:' + FUDPPort.ToString + '端口';
   chkStoreToSqlite.Caption := '保存数据到本地Sqlite库(ppro8.db)';
-
+  chkCalcLevel2.Caption    := '解析 Mark Depth 数据';
   self.Memo1.Clear;
+
+  BL2s := TL2Levels.Create;
+  AL2s := TL2Levels.Create;
+end;
+
+procedure TfmMain.FormDestroy( Sender: TObject );
+begin
+  BL2s.Destroy;
+  AL2s.Destroy;
 end;
 
 procedure TfmMain.IdUDPServerUDPRead( AThread: TIdUDPListenerThread;
   const AData: TIdBytes; ABinding: TIdSocketHandle );
 var
-  str   : string;
-  l2line: TL2Line;
+  sSource, sReplaced, guid: string;
+  l2line                  : TL2Line;
+  tick                    : Cardinal;
+  done                    : boolean;
 begin
-  str := BytesToString( AData ).Replace( #13#10, '' ).Replace( #13, '' ).Replace( #10, '' );
-  if ( Assigned( FDataProvider ) ) then
+  // guid      := CreateClassID;
+  done      := False;
+  tick      := GetTickCount;
+  sSource   := BytesToString( AData );
+  sReplaced := BytesToString( AData ).Replace( #13#10, '' ).Replace( #13, '' ).Replace( #10, '' );
+  if chkCalcLevel2.Checked then
   begin
-    l2line := TL2Line.FromCSVString( str );
+    l2line := TL2Line.FromCSVString( sReplaced );
     try
-      if not l2line.SaveToDataBase( FDataProvider ) then
+      if ( l2line.Side.ToLower = 'b' ) then
+      begin
+        BL2s.Parse( l2line );
+      end;
+      if ( l2line.Side.ToLower = 'a' ) then
+      begin
+        AL2s.Parse( l2line );
+      end;
+
+      if ( Assigned( FDataProvider ) ) then
+      begin
+        // l2line.RID := guid;
+        if not l2line.SaveToDataBase( FDataProvider ) then
           raise Exception.Create( 'save error' );
+      end;
+      tick := GetTickCount - tick;
+      done := True;
+      if ( l2line.Side.ToLower = 'b' ) then
+      begin
+        BL2s.RenderToListBox( self.ListBox1 );
+      end;
+      if ( l2line.Side.ToLower = 'a' ) then
+      begin
+        AL2s.RenderToListBox( self.ListBox2 );
+      end;
     finally
       l2line.Free;
     end;
   end;
-
-  self.Memo1.Lines.Add( str );
+  self.Memo1.Lines.Add( sSource );
+  if ( done ) then
+    self.Memo1.Lines.Add( 'used ' + tick.ToString + ' ms.' );
+  // self.Memo1.Lines.Add( '' );
 end;
 
 procedure TfmMain.Init;

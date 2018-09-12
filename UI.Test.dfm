@@ -2,8 +2,8 @@ object fmTest: TfmTest
   Left = 0
   Top = 0
   Caption = 'fmTest'
-  ClientHeight = 299
-  ClientWidth = 635
+  ClientHeight = 454
+  ClientWidth = 663
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,8 +14,8 @@ object fmTest: TfmTest
   Position = poScreenCenter
   OnCreate = FormCreate
   DesignSize = (
-    635
-    299)
+    663
+    454)
   PixelsPerInch = 96
   TextHeight = 13
   object btn1: TButton
@@ -27,25 +27,6 @@ object fmTest: TfmTest
     TabOrder = 0
     OnClick = btn1Click
   end
-  object Memo1: TMemo
-    Left = 8
-    Top = 152
-    Width = 619
-    Height = 139
-    Anchors = [akLeft, akTop, akRight, akBottom]
-    Lines.Strings = (
-      'Memo1')
-    TabOrder = 5
-  end
-  object chkListening: TCheckBox
-    Left = 8
-    Top = 97
-    Width = 449
-    Height = 17
-    Caption = 'chkListening'
-    TabOrder = 3
-    OnClick = chkListeningClick
-  end
   object chkSendTestUDPData: TCheckBox
     Left = 8
     Top = 74
@@ -55,15 +36,6 @@ object fmTest: TfmTest
     TabOrder = 2
     OnClick = chkSendTestUDPDataClick
   end
-  object chkStoreToSqlite: TCheckBox
-    Left = 8
-    Top = 120
-    Width = 449
-    Height = 17
-    Caption = 'chkStoreToSqlite'
-    TabOrder = 4
-    OnClick = chkStoreToSqliteClick
-  end
   object edtUDPPort: TEdit
     Left = 8
     Top = 48
@@ -72,6 +44,28 @@ object fmTest: TfmTest
     TabOrder = 1
     Text = 'edtUDPPort'
     OnChange = edtUDPPortChange
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 152
+    Width = 647
+    Height = 294
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Lines.Strings = (
+      
+        'LocalTime=22:36:37.962,Message=L2,MarketTime=10:36:38.975,Symbol' +
+        '=1988.HK,Mmid=HKE,Side=A,Price=5.33000,Volume=97'
+      '000,Depth=1,SequenceNumber=1992600')
+    TabOrder = 4
+  end
+  object btn2: TButton
+    Left = 8
+    Top = 99
+    Width = 273
+    Height = 25
+    Caption = 'btn1'
+    TabOrder = 3
+    OnClick = btn2Click
   end
   object tmrLabelFormSizeDisplay: TTimer
     Enabled = False
